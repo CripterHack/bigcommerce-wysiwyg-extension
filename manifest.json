@@ -1,0 +1,33 @@
+{
+    "name": "BigCommerce WYSIWYG Editor",
+    "version": "1.0",
+    "description": "Adds TinyMCE WYSIWYG editor to BigCommerce Page Builder",
+    "manifest_version": 3,
+    "permissions": ["activeTab", "scripting", "storage"],
+    "host_permissions": [
+        "*://*.mybigcommerce.com/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*.mybigcommerce.com/*"],
+            "js": ["content.js"],
+            "run_at": "document_idle"
+        }
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "images/icon16.png",
+            "48": "images/icon48.png",
+            "128": "images/icon128.png"
+        }
+    },
+    "icons": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+    }
+}
