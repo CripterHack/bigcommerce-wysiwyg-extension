@@ -1,52 +1,6 @@
-# Política de Privacidad - BigCommerce WYSIWYG Editor
-
-Fecha de última actualización: 25 de marzo de 2025
-
-## Resumen
-
-BigCommerce WYSIWYG Editor es una extensión para Chrome que mejora la experiencia de edición de campos HTML en BigCommerce. Valoramos su privacidad y nos comprometemos a ser transparentes sobre cómo funciona nuestra extensión.
-
-## Datos Recopilados
-
-**No recopilamos ningún dato personal.** La extensión funciona completamente en su navegador local y no envía datos a servidores externos. Específicamente:
-
-- No recopilamos información de identificación personal.
-- No rastreamos su actividad ni historial de navegación.
-- No almacenamos el contenido editado con nuestra herramienta.
-- No utilizamos cookies ni tecnologías de seguimiento.
-
-## Uso del Almacenamiento Local
-
-La extensión utiliza el almacenamiento local de Chrome (`chrome.storage.local`) únicamente para guardar preferencias y configuraciones de la extensión. Estos datos permanecen en su dispositivo y no se transmiten externamente.
-
-## Permisos de la Extensión
-
-Nuestra extensión solicita los siguientes permisos:
-
-- **activeTab**: Para interactuar con la pestaña activa y modificar campos de texto HTML.
-- **scripting**: Para ejecutar código en páginas de BigCommerce.
-- **storage**: Para almacenar configuraciones localmente.
-- **tabs**: Para detectar y responder a cambios en las pestañas de BigCommerce.
-
-## Acceso a Sitios Web
-
-La extensión solo se activa en dominios de BigCommerce (mybigcommerce.com) y no puede acceder a otros sitios web.
-
-## Cambios en esta Política
-
-Podemos actualizar esta política de privacidad periódicamente. Le notificaremos sobre cambios significativos publicando la nueva política de privacidad con cada actualización de la extensión.
-
-## Contacto
-
-Si tiene preguntas sobre esta política de privacidad, puede contactarnos a través de:
-- Correo electrónico: [su-email@ejemplo.com]
-- GitHub: [https://github.com/usuario/bigcommerce-wysiwyg-extension]
-
---- 
-
 # Privacy Policy - BigCommerce WYSIWYG Editor
 
-Last updated: March 25, 2025
+Last updated: March 26, 2025
 
 ## Overview
 
@@ -85,5 +39,5 @@ We may update this privacy policy periodically. We will notify you of significan
 ## Contact
 
 If you have questions about this privacy policy, you can contact us via:
-- Email: [your-email@example.com]
-- GitHub: [https://github.com/user/bigcommerce-wysiwyg-extension]
+- Email: [edgar@izignamx.com]
+- GitHub: [https://github.com/CripterHack/bigcommerce-wysiwyg-extension]

@@ -159,7 +159,7 @@ const browserAPI = (function() {
     };
 })();
 
-// Variable para controlar el modo fallback de la extensión
+// Variable for controlling the extension's fallback mode
 let EXTENSION_FALLBACK_MODE = false;
 
 /**
@@ -292,16 +292,16 @@ const FeatureDetection = {
     }
 };
 
-// Ajustar la función isBigCommerceAdmin para ser más robusta
+// Adjust the isBigCommerceAdmin function to be more robust
 function isBigCommerceAdmin() {
     try {
-        // Verificación específica del Page Builder (prioridad alta)
+        // Specific verification of Page Builder (high priority)
         if (window.location.href.includes('mybigcommerce.com/manage/page-builder')) {
             debug('BigCommerce Page Builder detected via direct URL match');
             return true;
         }
         
-        // URLs de BigCommerce
+        // BigCommerce URLs
         if (window.location.href.includes('mybigcommerce.com') ||
             window.location.href.includes('login.bigcommerce.com') ||
             window.location.href.includes('store.mybigcommerce.com') ||
@@ -311,20 +311,20 @@ function isBigCommerceAdmin() {
             return true;
         }
         
-        // Elementos DOM específicos de BigCommerce
+        // BigCommerce specific DOM elements
         const bcElements = [
-            // Navegación y header
+            // Navigation and header
             'nav.hqhCwM',
             '[data-test-id="pageBuilderContainer"]',
             '.Polaris-Frame',
             '.bcapp-iframe',
             '#header-logo-bigcommerce',
             
-            // Elementos del Page Builder
+            // Page Builder elements
             '.bcapp-decorator',
             '[data-stencil-editor]',
             
-            // Elementos de la interfaz de administración
+            // Admin interface elements
             '#content-container-bc',
             '.page-content-bc',
             '#react-footer.bc-footer',
@@ -338,7 +338,7 @@ function isBigCommerceAdmin() {
             }
         }
         
-        // Verificar por variables específicas de BigCommerce en window
+        // Check for BigCommerce specific variables in window
         const bcVars = [
             'BCData',
             'BCApp',
@@ -354,7 +354,7 @@ function isBigCommerceAdmin() {
             }
         }
         
-        // Verificar meta tags y otros elementos indirectos
+        // Check meta tags and other indirect elements
         if (document.querySelector('meta[name="generator"][content*="BigCommerce"]') ||
             document.querySelector('link[href*="mybigcommerce.com"]') ||
             document.querySelector('script[src*="mybigcommerce.com"]')) {
@@ -362,7 +362,7 @@ function isBigCommerceAdmin() {
             return true;
         }
         
-        // Última comprobación: Si hay textareas con ciertas clases
+        // Last check: If there are textareas with certain classes
         const bcTextareaSelectors = [
             'textarea.wysiwyg',
             'textarea.bc-product-description',
@@ -378,11 +378,11 @@ function isBigCommerceAdmin() {
             }
         }
         
-        // No parece ser BigCommerce
+        // Doesn't seem to be BigCommerce
         return false;
     } catch (error) {
         console.error('Error in isBigCommerceAdmin:', error);
-        return false; // Por defecto, no es BigCommerce si hay un error
+        return false; // Default, not BigCommerce if there's an error
     }
 }
 
@@ -591,7 +591,7 @@ function loadEditorStyles() {
                         border: 1px solid #ddd;
                         font-family: monospace;
                     }
-                    /* Fixes para BigCommerce Page Builder */
+                    /* Fixes for BigCommerce Page Builder */
                     .widget-form-field .bc-editor-wrapper {
                         width: 100% !important;
                         max-width: 100% !important;
@@ -1505,7 +1505,7 @@ class BasicHtmlEditor {
     }
 }
 
-// Función principal para mejorar campos de texto con el editor
+// Main function to enhance text fields with the editor
 function enhanceFieldWithEditor(field) {
     try {
         // Verificar si el campo ya tiene un editor asociado
@@ -1554,22 +1554,22 @@ function enhanceFieldWithEditor(field) {
     }
 }
 
-// Verificar si un campo debe ser mejorado con el editor
+// Check if a field should be enhanced with the editor
 function shouldEnhanceField(field) {
     try {
-        // Debug para ver qué campos estamos evaluando
+        // Debug to see which fields we are evaluating
         debug('Evaluating field for enhancement:', field.id || field.name || 'unnamed field', 
             'type:', field.tagName, 
             'class:', field.className || 'no-class');
         
-        // Solo mejorar textareas o inputs de tipo hidden que BigCommerce usa para HTML
+        // Only enhance textareas or hidden inputs that BigCommerce uses for HTML
         if (!(field instanceof HTMLTextAreaElement) && 
             !(field instanceof HTMLInputElement && field.type.toLowerCase() === 'hidden')) {
             debug('Field rejected: not a textarea or hidden input');
             return false;
         }
         
-        // Evitar mejorar campos que no deben tener formato
+        // Avoid enhancing fields that should not be formatted
         const excludePatterns = [
             'password', 'search', 'email', 'url', 'tel', 'number', 'date',
             'captcha', 'code-editor', 'json', 'css', 'javascript'
@@ -1586,7 +1586,7 @@ function shouldEnhanceField(field) {
             }
         }
         
-        // Primera prueba: Es un campo HTML explícito
+        // First test: It's an explicit HTML field
         if (fieldId.includes('html') || 
             fieldName.includes('html') || 
             fieldClass.includes('html') || 
@@ -1595,7 +1595,7 @@ function shouldEnhanceField(field) {
             return true;
         }
         
-        // Segunda prueba: Es un campo de contenido o descripción
+        // Second test: It's a content or description field
         if (fieldId.includes('content') || 
             fieldId.includes('description') || 
             fieldName.includes('content') || 
@@ -1605,15 +1605,15 @@ function shouldEnhanceField(field) {
             return true;
         }
         
-        // Tercera prueba: Es un campo de texto grande (textareas)
+        // Third test: It's a large text field (textareas)
         if (field instanceof HTMLTextAreaElement) {
-            // Si es un textarea, casi siempre querremos mejorarlo
+            // If it's a textarea, we almost always want to enhance it
             if (field.rows > 2 || field.offsetHeight > 80 || field.cols > 40) {
                 debug('Field accepted: large textarea');
                 return true;
             }
             
-            // Si el textarea contiene algunas etiquetas HTML, probablemente sea contenido HTML
+            // If the textarea contains some HTML tags, it's probably HTML content
             const value = field.value || '';
             if (value.includes('<p>') || 
                 value.includes('<div>') || 
@@ -1625,15 +1625,15 @@ function shouldEnhanceField(field) {
                 return true;
             }
             
-            // En BigCommerce, muchos campos podrían ser HTML
+            // In BigCommerce, many fields could be HTML
             if (isBigCommerceAdmin()) {
                 debug('Field accepted: textarea in BigCommerce admin');
                 return true;
             }
         }
         
-        // Cuarta prueba: Para compatibilidad con BigCommerce
-        // Patrones comunes de ID/name en BigCommerce para campos de contenido
+        // Fourth test: For BigCommerce compatibility
+        // Common ID/name patterns in BigCommerce for content fields
         const bcPatterns = [
             'wysiwyg', 'editor', 'rich', 'text_area', 
             'product_description', 'category_description',
@@ -1647,22 +1647,22 @@ function shouldEnhanceField(field) {
             }
         }
         
-        // Por defecto, rechazar el campo
+        // By default, reject the field
         debug('Field rejected: does not match any enhancement criteria');
         return false;
     } catch (error) {
         console.error('Error in shouldEnhanceField:', error);
-        // En caso de error, devolver true para ser inclusivos
+        // In case of error, return true to be inclusive
         return true;
     }
 }
 
-// Función para escanear la página en busca de campos a mejorar
+// Function to scan the page for fields to enhance
 function scanAndEnhanceFields() {
     debug('Scanning for fields to enhance...');
     
     try {
-        // Buscar textareas que parecen ser editores de contenido
+        // Look for textareas that appear to be content editors
         const allTextAreas = document.querySelectorAll('textarea');
         debug(`Found ${allTextAreas.length} textareas`);
         
@@ -1677,7 +1677,7 @@ function scanAndEnhanceFields() {
             }
         });
         
-        // Buscar también campos hidden específicos que BigCommerce usa para contenido HTML
+        // Also look for hidden fields that BigCommerce uses for HTML content
         const hiddenContentFields = document.querySelectorAll('input[type="hidden"][name*="content"], input[type="hidden"][name*="description"]');
         hiddenContentFields.forEach(field => {
             if (shouldEnhanceField(field)) {
@@ -1701,17 +1701,17 @@ function scanAndEnhanceFields() {
     }
 }
 
-// Función para inicializar la extensión
+// Function to initialize the extension
 function initializeExtension() {
     debug('Initializing BigCommerce WYSIWYG Editor extension...');
     
-    // Verificar si estamos en el admin de BigCommerce
+    // Check if we're in the BigCommerce admin
     if (!isBigCommerceAdmin()) {
         debug('Not in BigCommerce admin, skipping initialization');
         return;
     }
     
-    // Verificar el contexto de la extensión
+    // Check the extension context
     const extensionValid = browserAPI.isValid();
     debug('Extension context valid:', extensionValid);
     
@@ -1720,15 +1720,15 @@ function initializeExtension() {
         EXTENSION_FALLBACK_MODE = true;
     }
     
-    // Cargar estilos del editor
+    // Load editor styles
     loadEditorStyles()
         .then(() => {
             debug('Editor styles loaded successfully');
             
-            // Escanear y mejorar campos iniciales
+            // Scan and enhance initial fields
             const initialCount = scanAndEnhanceFields();
             
-            // Configurar observador para detectar nuevos campos
+            // Set up observer to detect new fields
             setupDynamicFieldsObserver();
             
             debug(`Initialization complete. Initially enhanced ${initialCount} fields.`);
@@ -1743,7 +1743,7 @@ function initializeExtension() {
         });
 }
 
-// Observador para detectar cuando se añaden nuevos campos dinámicamente
+// Observer to detect when new fields are added dynamically
 function setupDynamicFieldsObserver() {
     try {
         if (typeof MutationObserver === 'undefined') {
@@ -1755,11 +1755,11 @@ function setupDynamicFieldsObserver() {
             let shouldScan = false;
             
             for (const mutation of mutations) {
-                // Si se añaden nuevos nodos, verificar si hay campos que mejorar
+                // If new nodes are added, check if there are fields to enhance
                 if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
                     for (const node of mutation.addedNodes) {
                         if (node.nodeType === Node.ELEMENT_NODE) {
-                            // Si es un campo directamente o contiene campos
+                            // If it's a field directly or contains fields
                             if (shouldEnhanceField(node) || 
                                 node.querySelector('textarea, input[type="hidden"]')) {
                                 shouldScan = true;
@@ -1774,11 +1774,11 @@ function setupDynamicFieldsObserver() {
             
             if (shouldScan) {
                 debug('Detected new potential fields, rescanning...');
-                setTimeout(scanAndEnhanceFields, 500); // Pequeño retraso para asegurar que el DOM esté listo
+                setTimeout(scanAndEnhanceFields, 500); // Short delay to ensure the DOM is ready
             }
         });
         
-        // Observar todo el documento para cambios
+        // Observe the entire document for changes
         observer.observe(document.body, {
             childList: true, 
             subtree: true
@@ -1795,16 +1795,16 @@ function setupDynamicFieldsObserver() {
     }
 }
 
-// Iniciar la extensión cuando el DOM esté completamente cargado
+// Start the extension when the DOM is fully loaded
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeExtension);
 } else {
-    // Si el DOM ya está cargado, iniciar inmediatamente
+    // If the DOM is already loaded, start immediately
     initializeExtension();
 }
 
-// Reintentar la inicialización después de la carga completa de la página
-// Esto ayuda en casos donde BigCommerce carga dinámicamente el contenido
+// Retry initialization after the page is completely loaded
+// This helps in cases where BigCommerce loads content dynamically
 window.addEventListener('load', () => {
     setTimeout(() => {
         debug('Retrying initialization after page load');
@@ -1812,7 +1812,7 @@ window.addEventListener('load', () => {
     }, 1000);
 });
 
-// También reintentar periódicamente para páginas con carga dinámica
+// Also retry periodically for pages with dynamic loading
 let retryCount = 0;
 const maxRetries = 5;
 const retryInterval = setInterval(() => {

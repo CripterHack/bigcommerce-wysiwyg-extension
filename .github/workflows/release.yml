@@ -6,23 +6,23 @@ on:
       - master
       - main
 
-# Añadir permisos globales para el workflow
+# Add global permissions for the workflow
 permissions:
-  contents: write  # Esto es necesario para crear releases y tags
+  contents: write  # This is necessary to create releases and tags
   issues: read
   pull-requests: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # También podemos especificar permisos a nivel de job si es necesario
+    # We can also specify permissions at the job level if needed
     # permissions:
     #   contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Necesario para obtener todos los commits para el changelog
+          fetch-depth: 0  # Necessary to get all commits for the changelog
         
       - name: Get version from manifest
         id: get_version
@@ -64,14 +64,14 @@ jobs:
         run: |
           MISSING_FILES=0
           
-          # Lista de archivos requeridos
+          # List of required files
           REQUIRED_FILES=(
             "manifest.json"
             "content.js"
             "background.js"
           )
           
-          # Verificar cada archivo requerido
+          # Check each required file
           for file in "${REQUIRED_FILES[@]}"; do
             if [ ! -f "$file" ]; then
               echo "Error: Required file '$file' is missing"
@@ -81,14 +81,14 @@ jobs:
             fi
           done
           
-          # Verificar carpeta de imágenes
+          # Check images directory
           if [ ! -d "img" ]; then
             echo "Error: Required directory 'img' is missing"
             MISSING_FILES=$((MISSING_FILES+1))
           else
             echo "✓ Found img directory"
             
-            # Verificar íconos
+            # Check icons
             for icon in "icon16.png" "icon48.png" "icon128.png"; do
               if [ ! -f "img/$icon" ]; then
                 echo "Warning: Icon 'img/$icon' is missing"
@@ -98,7 +98,7 @@ jobs:
             done
           fi
           
-          # Salir si faltan archivos críticos
+          # Exit if critical files are missing
           if [ $MISSING_FILES -gt 0 ]; then
             echo "Error: $MISSING_FILES required files are missing. Cannot create release."
             exit 1
@@ -110,26 +110,26 @@ jobs:
         if: env.TAG_EXISTS != 'true'
         id: changelog
         run: |
-          echo "## Cambios desde el último release" > changelog.md
+          echo "## Changes since last release" > changelog.md
           
-          # Obtenemos el último tag (si existe)
+          # Get the last tag (if it exists)
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           
           if [ -z "$LAST_TAG" ]; then
-            # Si no hay tags previos, mostrar todos los commits
-            echo "### Primer release - Todos los cambios" >> changelog.md
+            # If there are no previous tags, show all commits
+            echo "### First release - All changes" >> changelog.md
             git log --pretty=format:"* %s (%h)" >> changelog.md
           else
-            # Si hay un tag previo, mostrar los cambios desde ese tag
-            echo "### Cambios desde $LAST_TAG" >> changelog.md
+            # If there's a previous tag, show changes since that tag
+            echo "### Changes since $LAST_TAG" >> changelog.md
             git log $LAST_TAG..HEAD --pretty=format:"* %s (%h)" >> changelog.md
           fi
           
           echo "" >> changelog.md
-          echo "Generado automáticamente el $(date '+%Y-%m-%d %H:%M:%S')" >> changelog.md
+          echo "Automatically generated on $(date '+%Y-%m-%d %H:%M:%S')" >> changelog.md
           
-          # Mostrar el changelog para debug
-          echo "Changelog generado:"
+          # Show changelog for debugging
+          echo "Generated changelog:"
           cat changelog.md
           
       - name: Package Extension
@@ -144,18 +144,18 @@ jobs:
           # Create package directory
           mkdir -p temp_package/img
           
-          # Copy files to package directory - Copiar todos los archivos principales
+          # Copy files to package directory - Copy all main files
           cp manifest.json temp_package/
           cp content.js temp_package/
           cp background.js temp_package/
           
-          # Copiar archivos opcionales
+          # Copy optional files
           cp popup.js temp_package/ 2>/dev/null || echo "popup.js not found, skipping"
           cp popup.html temp_package/ 2>/dev/null || echo "popup.html not found, skipping"
           cp README.md temp_package/ 2>/dev/null || echo "README.md not found, skipping"
           cp PRIVACY_POLICY.md temp_package/ 2>/dev/null || echo "PRIVACY_POLICY.md not found, skipping"
           
-          # Copiar íconos
+          # Copy icons
           cp img/icon16.png temp_package/img/ 2>/dev/null || echo "icon16.png not found, skipping"
           cp img/icon48.png temp_package/img/ 2>/dev/null || echo "icon48.png not found, skipping"
           cp img/icon128.png temp_package/img/ 2>/dev/null || echo "icon128.png not found, skipping"
@@ -165,7 +165,7 @@ jobs:
           zip -r ../$ZIP_FILE *
           cd ..
           
-          # Mostrar contenido del ZIP
+          # Show ZIP contents
           echo "ZIP contains:"
           unzip -l $ZIP_FILE
           
@@ -183,35 +183,35 @@ jobs:
           cat > release_notes.md << EOL
           # BigCommerce WYSIWYG Editor v$VERSION
           
-          Esta versión ha sido generada automáticamente a partir del código más reciente en la rama master.
+          This version was automatically generated from the latest code in the master branch.
           
-          ## Características principales
+          ## Main Features
           
-          - Editor WYSIWYG mejorado para BigCommerce
-          - Capacidades de edición de texto mejoradas
-          - Corrección de errores y mejoras de rendimiento
+          - Enhanced WYSIWYG editor for BigCommerce
+          - Improved text editing capabilities
+          - Bug fixes and performance improvements
           
-          ## Instalación
+          ## Installation
           
-          1. Descarga el archivo ZIP
-          2. Descomprime en una carpeta local
-          3. En Chrome, ve a chrome://extensions/
-          4. Habilita el "Modo desarrollador"
-          5. Haz clic en "Cargar descomprimida" y selecciona la carpeta descomprimida
-          6. La extensión debería estar instalada y activa
+          1. Download the ZIP file
+          2. Unzip to a local folder
+          3. In Chrome, go to chrome://extensions/
+          4. Enable "Developer mode"
+          5. Click "Load unpacked" and select the unzipped folder
+          6. The extension should now be installed and active
           
           EOL
           
-          # Añadir el changelog generado anteriormente
+          # Add the generated changelog
           cat changelog.md >> release_notes.md
           
-          echo "## Problemas conocidos" >> release_notes.md
+          echo "## Known Issues" >> release_notes.md
           echo "" >> release_notes.md
-          echo "Por favor, reporta cualquier problema en el repositorio de GitHub." >> release_notes.md
+          echo "Please report any issues in the GitHub repository." >> release_notes.md
           
           echo "Created release notes file"
       
-      # Crear el tag primero      
+      # Create the tag first      
       - name: Create Git Tag
         if: env.TAG_EXISTS != 'true'
         run: |
@@ -236,8 +236,8 @@ jobs:
       - name: Tag Already Exists
         if: env.TAG_EXISTS == 'true'
         run: |
-          echo "::warning::El tag v$VERSION ya existe en el repositorio. No se creará un nuevo release."
-          echo "Si necesitas actualizar este release, primero elimina el tag existente con:"
+          echo "::warning::Tag v$VERSION already exists in the repository. A new release will not be created."
+          echo "If you need to update this release, first delete the existing tag with:"
           echo "git tag -d v$VERSION"
           echo "git push --delete origin v$VERSION"
-          echo "Y luego vuelve a ejecutar este workflow." 
+          echo "Then run this workflow again." 
