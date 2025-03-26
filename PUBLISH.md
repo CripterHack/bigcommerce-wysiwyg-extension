@@ -32,7 +32,7 @@ Before starting the publication process, make sure you have these resources read
 2. **Create New Publication**
    - Click on "New Item"
    - Choose "Upload a package"
-   - Select the previously generated `bigcommerce-wysiwyg-editor-v4.0.zip` file
+   - Select the previously generated `bigcommerce-wysiwyg-editor-v4.1.zip` file
 
 3. **Extension Information**
    - **Store Name**: BigCommerce WYSIWYG Editor

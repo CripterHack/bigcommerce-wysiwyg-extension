@@ -1,7 +1,7 @@
 # Script to package the Chrome extension for distribution
-Write-Host "Packaging BigCommerce WYSIWYG Editor v4.0..." -ForegroundColor Cyan
+Write-Host "Packaging BigCommerce WYSIWYG Editor v4.1..." -ForegroundColor Cyan
 
-$zipFileName = "bigcommerce-wysiwyg-editor-v4.0.zip"
+$zipFileName = "bigcommerce-wysiwyg-editor-v4.1.zip"
 
 # Remove existing zip if it exists
 if (Test-Path $zipFileName) {
