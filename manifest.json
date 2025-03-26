@@ -1,18 +1,21 @@
 {
     "name": "BigCommerce WYSIWYG Editor",
-    "version": "1.0",
-    "description": "Adds TinyMCE WYSIWYG editor to BigCommerce Page Builder",
+    "version": "4.0",
+    "description": "Adds a lightweight HTML editor to BigCommerce with keyboard shortcuts, undo/redo, and accessibility features",
     "manifest_version": 3,
-    "permissions": ["activeTab", "scripting", "storage"],
+    "permissions": ["activeTab", "scripting", "storage", "tabs"],
     "host_permissions": [
-        "*://*.mybigcommerce.com/*"
+        "*://*.mybigcommerce.com/manage/page-builder*"
     ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'"
+    },
     "background": {
         "service_worker": "background.js"
     },
     "content_scripts": [
         {
-            "matches": ["*://*.mybigcommerce.com/*"],
+            "matches": ["*://*.mybigcommerce.com/manage/page-builder*"],
             "js": ["content.js"],
             "run_at": "document_idle"
         }
@@ -20,14 +23,14 @@
     "action": {
         "default_popup": "popup.html",
         "default_icon": {
-            "16": "images/icon16.png",
-            "48": "images/icon48.png",
-            "128": "images/icon128.png"
+            "16": "img/icon16.png",
+            "48": "img/icon48.png",
+            "128": "img/icon128.png"
         }
     },
     "icons": {
-        "16": "images/icon16.png",
-        "48": "images/icon48.png",
-        "128": "images/icon128.png"
+        "16": "img/icon16.png",
+        "48": "img/icon48.png",
+        "128": "img/icon128.png"
     }
 }
