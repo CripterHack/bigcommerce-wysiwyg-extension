@@ -6,9 +6,18 @@ on:
       - master
       - main
 
+# Añadir permisos globales para el workflow
+permissions:
+  contents: write  # Esto es necesario para crear releases y tags
+  issues: read
+  pull-requests: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    # También podemos especificar permisos a nivel de job si es necesario
+    # permissions:
+    #   contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,6 +34,7 @@ jobs:
       - name: Check if tag exists
         id: check_tag
         run: |
+          git fetch --tags
           if git rev-parse "v$VERSION" >/dev/null 2>&1; then
             echo "TAG_EXISTS=true" >> $GITHUB_ENV
             echo "Tag v$VERSION already exists"
@@ -200,13 +210,20 @@ jobs:
           echo "Por favor, reporta cualquier problema en el repositorio de GitHub." >> release_notes.md
           
           echo "Created release notes file"
+      
+      # Crear el tag primero      
+      - name: Create Git Tag
+        if: env.TAG_EXISTS != 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a "v$VERSION" -m "Release v$VERSION"
+          git push origin "v$VERSION"
           
       - name: Create Release
         if: env.TAG_EXISTS != 'true'
         id: create_release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.VERSION }}
           name: Release v${{ env.VERSION }}
