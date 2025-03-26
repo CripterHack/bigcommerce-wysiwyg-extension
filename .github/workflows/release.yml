@@ -1,0 +1,226 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Necesario para obtener todos los commits para el changelog
+        
+      - name: Get version from manifest
+        id: get_version
+        run: |
+          VERSION=$(grep '"version"' manifest.json | cut -d '"' -f 4)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Found version: $VERSION"
+      
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+            echo "Tag v$VERSION already exists"
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+            echo "Tag v$VERSION does not exist yet"
+          fi
+          
+      - name: Setup Node.js
+        if: env.TAG_EXISTS != 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Cache Node modules
+        if: env.TAG_EXISTS != 'true'
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+          
+      - name: Validate required files
+        if: env.TAG_EXISTS != 'true'
+        id: validate
+        run: |
+          MISSING_FILES=0
+          
+          # Lista de archivos requeridos
+          REQUIRED_FILES=(
+            "manifest.json"
+            "content.js"
+            "background.js"
+          )
+          
+          # Verificar cada archivo requerido
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "Error: Required file '$file' is missing"
+              MISSING_FILES=$((MISSING_FILES+1))
+            else
+              echo "✓ Found required file: $file"
+            fi
+          done
+          
+          # Verificar carpeta de imágenes
+          if [ ! -d "img" ]; then
+            echo "Error: Required directory 'img' is missing"
+            MISSING_FILES=$((MISSING_FILES+1))
+          else
+            echo "✓ Found img directory"
+            
+            # Verificar íconos
+            for icon in "icon16.png" "icon48.png" "icon128.png"; do
+              if [ ! -f "img/$icon" ]; then
+                echo "Warning: Icon 'img/$icon' is missing"
+              else
+                echo "✓ Found icon: img/$icon"
+              fi
+            done
+          fi
+          
+          # Salir si faltan archivos críticos
+          if [ $MISSING_FILES -gt 0 ]; then
+            echo "Error: $MISSING_FILES required files are missing. Cannot create release."
+            exit 1
+          fi
+          
+          echo "All required files are present!"
+          
+      - name: Generate changelog
+        if: env.TAG_EXISTS != 'true'
+        id: changelog
+        run: |
+          echo "## Cambios desde el último release" > changelog.md
+          
+          # Obtenemos el último tag (si existe)
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$LAST_TAG" ]; then
+            # Si no hay tags previos, mostrar todos los commits
+            echo "### Primer release - Todos los cambios" >> changelog.md
+            git log --pretty=format:"* %s (%h)" >> changelog.md
+          else
+            # Si hay un tag previo, mostrar los cambios desde ese tag
+            echo "### Cambios desde $LAST_TAG" >> changelog.md
+            git log $LAST_TAG..HEAD --pretty=format:"* %s (%h)" >> changelog.md
+          fi
+          
+          echo "" >> changelog.md
+          echo "Generado automáticamente el $(date '+%Y-%m-%d %H:%M:%S')" >> changelog.md
+          
+          # Mostrar el changelog para debug
+          echo "Changelog generado:"
+          cat changelog.md
+          
+      - name: Package Extension
+        if: env.TAG_EXISTS != 'true'
+        run: |
+          # Package the extension
+          echo "Packaging extension v$VERSION"
+          
+          # Define output zip file
+          ZIP_FILE="bigcommerce-wysiwyg-editor-v$VERSION.zip"
+          
+          # Create package directory
+          mkdir -p temp_package/img
+          
+          # Copy files to package directory - Copiar todos los archivos principales
+          cp manifest.json temp_package/
+          cp content.js temp_package/
+          cp background.js temp_package/
+          
+          # Copiar archivos opcionales
+          cp popup.js temp_package/ 2>/dev/null || echo "popup.js not found, skipping"
+          cp popup.html temp_package/ 2>/dev/null || echo "popup.html not found, skipping"
+          cp README.md temp_package/ 2>/dev/null || echo "README.md not found, skipping"
+          cp PRIVACY_POLICY.md temp_package/ 2>/dev/null || echo "PRIVACY_POLICY.md not found, skipping"
+          
+          # Copiar íconos
+          cp img/icon16.png temp_package/img/ 2>/dev/null || echo "icon16.png not found, skipping"
+          cp img/icon48.png temp_package/img/ 2>/dev/null || echo "icon48.png not found, skipping"
+          cp img/icon128.png temp_package/img/ 2>/dev/null || echo "icon128.png not found, skipping"
+          
+          # Create zip file
+          cd temp_package
+          zip -r ../$ZIP_FILE *
+          cd ..
+          
+          # Mostrar contenido del ZIP
+          echo "ZIP contains:"
+          unzip -l $ZIP_FILE
+          
+          # Clean up
+          rm -rf temp_package
+          
+          # Set output
+          echo "ZIP_FILE=$ZIP_FILE" >> $GITHUB_ENV
+          echo "Created ZIP file: $ZIP_FILE"
+      
+      - name: Generate Release Notes
+        if: env.TAG_EXISTS != 'true'
+        id: release_notes
+        run: |
+          cat > release_notes.md << EOL
+          # BigCommerce WYSIWYG Editor v$VERSION
+          
+          Esta versión ha sido generada automáticamente a partir del código más reciente en la rama master.
+          
+          ## Características principales
+          
+          - Editor WYSIWYG mejorado para BigCommerce
+          - Capacidades de edición de texto mejoradas
+          - Corrección de errores y mejoras de rendimiento
+          
+          ## Instalación
+          
+          1. Descarga el archivo ZIP
+          2. Descomprime en una carpeta local
+          3. En Chrome, ve a chrome://extensions/
+          4. Habilita el "Modo desarrollador"
+          5. Haz clic en "Cargar descomprimida" y selecciona la carpeta descomprimida
+          6. La extensión debería estar instalada y activa
+          
+          EOL
+          
+          # Añadir el changelog generado anteriormente
+          cat changelog.md >> release_notes.md
+          
+          echo "## Problemas conocidos" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "Por favor, reporta cualquier problema en el repositorio de GitHub." >> release_notes.md
+          
+          echo "Created release notes file"
+          
+      - name: Create Release
+        if: env.TAG_EXISTS != 'true'
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+          files: |
+            ${{ env.ZIP_FILE }}
+            
+      - name: Tag Already Exists
+        if: env.TAG_EXISTS == 'true'
+        run: |
+          echo "::warning::El tag v$VERSION ya existe en el repositorio. No se creará un nuevo release."
+          echo "Si necesitas actualizar este release, primero elimina el tag existente con:"
+          echo "git tag -d v$VERSION"
+          echo "git push --delete origin v$VERSION"
+          echo "Y luego vuelve a ejecutar este workflow." 
