@@ -1,15 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BigCommerce WYSIWYG Editor</title>
   <style>
     body {
       width: 250px;
       padding: 10px;
       font-family: Arial, sans-serif;
+      margin: 0;
     }
     h2 {
       font-size: 16px;
       margin-top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .version {
+      font-size: 9px;
+      color: #999;
+      font-weight: normal;
     }
     button {
       width: 100%;
@@ -20,16 +32,106 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
     button:hover {
       background-color: #45a049;
     }
+    button:focus {
+      outline: 2px solid #1976d2;
+      outline-offset: 2px;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    .footer {
+      font-size: 9px;
+      color: #999;
+      margin-top: 15px;
+      text-align: center;
+      border-top: 1px solid #eee;
+      padding-top: 5px;
+    }
+    .help-link {
+      color: #666;
+      text-decoration: none;
+    }
+    .help-link:hover, .help-link:focus {
+      text-decoration: underline;
+    }
+    #status-message {
+      margin-top: 10px;
+      font-size: 12px;
+      padding: 5px;
+      border-radius: 3px;
+    }
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+    .tips-container {
+      margin-top: 15px;
+      background-color: #f8f9fa;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      padding: 8px;
+      font-size: 12px;
+    }
+    .tips-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .tips-list {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .tips-list li {
+      margin-bottom: 3px;
+    }
   </style>
 </head>
 <body>
-  <h2>BigCommerce WYSIWYG Editor</h2>
-  <p>WYSIWYG editors will be automatically activated when you edit text fields in Page Builder.</p>
-  <button id="refresh-btn">Refresh Editors</button>
+  <header>
+    <h2 id="main-heading">
+      BigCommerce WYSIWYG Editor
+      <span class="version" aria-label="Version 4.0">v4.0</span>
+    </h2>
+  </header>
+
+  <main aria-labelledby="main-heading">
+    <p>WYSIWYG editors will be automatically activated when you edit HTML fields in Page Builder.</p>
+    <div id="status-message" role="status" aria-live="polite"></div>
+    <button id="refresh-btn" aria-label="Refresh Editors">Refresh Editors</button>
+    
+    <div class="tips-container">
+      <div class="tips-title">Quick Tips:</div>
+      <ul class="tips-list">
+        <li>Use keyboard shortcuts (Ctrl+B, Ctrl+I) for faster editing</li>
+        <li>Select text before clicking the link button</li>
+        <li>Click the editor's help icon for more shortcuts</li>
+        <li>Hit "Refresh" if editors don't appear automatically</li>
+      </ul>
+    </div>
+  </main>
+  
+  <footer class="footer">
+    <nav aria-label="Extension Resources">
+      <a href="https://github.com/user/bigcommerce-wysiwyg-extension" target="_blank" rel="noopener noreferrer" class="help-link" aria-label="GitHub Repository">GitHub</a> | 
+      <a href="#" id="help-link" class="help-link" aria-label="Help and Troubleshooting">Help</a>
+    </nav>
+  </footer>
+  
+  <div id="debug-info" class="visually-hidden" aria-hidden="true"></div>
+  <div id="announcer" class="visually-hidden" role="status" aria-live="polite"></div>
+  
   <script src="popup.js"></script>
 </body>
 </html>
