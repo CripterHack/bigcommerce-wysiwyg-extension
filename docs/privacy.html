@@ -21,6 +21,21 @@
       backdrop-filter: blur(6px);
       border-radius: 1.5rem;
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      font-size: 0.97rem;
+    }
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center px-4 py-8 text-slate-900">
@@ -28,38 +43,82 @@
     <img src="assets/icon128.png" alt="BigCommerce WYSIWYG Editor icon" class="w-16 h-16 mb-2 drop-shadow-lg">
     <h1 class="text-2xl font-extrabold tracking-tight text-center mb-2">Privacy Policy</h1>
     <article class="prose prose-slate max-w-none text-slate-800">
-      <h2>BigCommerce WYSIWYG Editor</h2>
-      <p><strong>Last updated: March 26, 2025</strong></p>
-      <h3>Overview</h3>
-      <p>BigCommerce WYSIWYG Editor is a Chrome extension that enhances HTML field editing in BigCommerce. We value your privacy and are committed to being transparent about how our extension works.</p>
-      <h3>Data Collection</h3>
-      <p><strong>We do not collect any personal data.</strong> The extension works entirely in your local browser and does not send data to external servers. Specifically:</p>
+      <p class="text-sm text-slate-500 mb-2"><em>Last updated: 21 July 2025</em></p>
+      <h2>1. Introduction</h2>
+      <p><strong>BigCommerce WYSIWYG Editor</strong> (the “Extension”) is a Chrome browser extension that adds a rich‑text toolbar to <b>HTML</b> blocks inside BigCommerce Page Builder. We respect your privacy and are committed to protecting it. This document explains what information we collect, how we use it, and what choices you have. <span class="font-semibold">In short: we do not collect, store, or transmit any personal data.</span></p>
+      <h2>2. Data We Collect</h2>
+      <p>We <strong>do not</strong>:</p>
       <ul>
-        <li>We do not collect personally identifiable information.</li>
-        <li>We do not track your activity or browsing history.</li>
-        <li>We do not store content edited with our tool.</li>
-        <li>We do not use cookies or tracking technologies.</li>
+        <li>Collect personally identifiable information (PII)</li>
+        <li>Track browsing history or user activity outside BigCommerce Page Builder</li>
+        <li>Store or transmit the content you edit in your store</li>
       </ul>
-      <h3>Use of Local Storage</h3>
-      <p>The extension uses Chrome's local storage (<code>chrome.storage.local</code>) solely to save extension preferences and settings. This data remains on your device and is not transmitted externally.</p>
-      <h3>Extension Permissions</h3>
-      <p>Our extension requests the following permissions:</p>
+      <p>The Extension operates entirely in your local browser context and never sends data to external servers.</p>
+      <h2>3. Local Storage</h2>
+      <p>The Extension may save a few non‑personal settings (e.g., whether the toolbar starts minimized) using Chrome’s <code>storage</code> API. These values are:</p>
       <ul>
-        <li><strong>activeTab</strong>: To interact with the active tab and modify HTML text fields.</li>
-        <li><strong>scripting</strong>: To run code on BigCommerce pages.</li>
-        <li><strong>storage</strong>: To store settings locally.</li>
-        <li><strong>tabs</strong>: To detect and respond to changes in BigCommerce tabs.</li>
+        <li>Stored only on your device</li>
+        <li>Not synced to our servers or anyone else’s</li>
+        <li>Removable at any time via the Chrome “Clear browsing data → Site settings → Hosted app data” dialog or by uninstalling the Extension</li>
       </ul>
-      <h3>Website Access</h3>
-      <p>The extension only activates on BigCommerce domains (<code>mybigcommerce.com</code>) and cannot access other websites.</p>
-      <h3>Changes to This Policy</h3>
-      <p>We may update this privacy policy periodically. We will notify you of significant changes by posting the new privacy policy with each extension update.</p>
-      <h3>Contact</h3>
-      <p>If you have questions about this privacy policy, you can contact us via:</p>
-      <ul>
-        <li>Email: <a href="mailto:edgar@izignamx.com">edgar@izignamx.com</a></li>
-        <li>GitHub: <a href="https://github.com/CripterHack/bigcommerce-wysiwyg-extension" target="_blank" rel="noopener">https://github.com/CripterHack/bigcommerce-wysiwyg-extension</a></li>
-      </ul>
+      <h2>4. Chrome Permissions Explained</h2>
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Permission</th>
+              <th>Why It’s Needed</th>
+              <th>Scope</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>activeTab</code></td>
+              <td>Allows the Extension to run its script <b>only after you interact with it</b> (click icon) in the current BigCommerce tab</td>
+              <td>Single active tab</td>
+            </tr>
+            <tr>
+              <td><code>scripting</code></td>
+              <td>Injects the toolbar’s JavaScript/CSS into Page Builder after verifying the URL</td>
+              <td>BigCommerce Page Builder pages only</td>
+            </tr>
+            <tr>
+              <td><code>storage</code></td>
+              <td>Saves local UI preferences (no user data)</td>
+              <td>Your browser profile</td>
+            </tr>
+            <tr>
+              <td><code>tabs</code></td>
+              <td>Reads the current tab’s URL to confirm it matches <code>*.mybigcommerce.com</code> before activation</td>
+              <td>Tab URL only</td>
+            </tr>
+            <tr>
+              <td>Host <code>*://*.mybigcommerce.com/*</code></td>
+              <td>Restricts execution exclusively to BigCommerce domains</td>
+              <td>No other sites</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h2>5. Cookies and Tracking</h2>
+      <p>The Extension sets <strong>no cookies</strong> and implements <strong>no tracking</strong> or analytics mechanisms.</p>
+      <h2>6. Third‑Party Data Sharing</h2>
+      <p>We do <strong>not</strong> share data with third parties, affiliates, advertisers, or analytics providers because no data is collected in the first place.</p>
+      <h2>7. Security</h2>
+      <p>All code is bundled inside the Extension package and reviewed publicly on GitHub. No remote code is downloaded or executed at runtime, minimizing supply‑chain risks. Updates are delivered only through the official Chrome Web Store.</p>
+      <h2>8. Children’s Privacy</h2>
+      <p>The Extension is intended for users aged 18 and above who manage BigCommerce stores. It collects no data from anyone, including children under 13.</p>
+      <h2>9. Changes to This Policy</h2>
+      <p>If future updates introduce features that require data collection, we will:</p>
+      <ol>
+        <li>Update this policy and the Extension’s listing before release</li>
+        <li>Obtain explicit user consent where applicable</li>
+        <li>Limit data collection to what is strictly necessary for new features</li>
+      </ol>
+      <h2>10. Contact</h2>
+      <p>If you have questions about this Privacy Policy, please email <a href="mailto:dev@izignamx.com"><b>dev@izignamx.com</b></a> or open an issue in the <a href="https://github.com/CripterHack/bigcommerce-wysiwyg-extension" target="_blank" rel="noopener">GitHub repository</a>.</p>
+      <br/><hr/><br/>
+      <p class="text-xs text-slate-500">By installing or using the Extension you acknowledge that you have read and understood this Privacy Policy.</p>
     </article>
     <div class="mt-8 flex flex-col items-center gap-2 w-full">
       <a href="index.html" class="text-xs text-slate-500 hover:text-blue-600 underline">&larr; Back to Home</a>
