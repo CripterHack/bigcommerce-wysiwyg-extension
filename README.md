@@ -75,6 +75,15 @@ This extension does not collect or transmit any personal data. It operates compl
 
 For more details, see our [Privacy Policy](PRIVACY_POLICY.md).
 
+## Project Website & Landing Page
+
+A public landing page for this extension is available at:
+
+- [Landing Page](https://cripterhack.github.io/bigcommerce-wysiwyg-extension/)
+- [Privacy Policy](https://cripterhack.github.io/bigcommerce-wysiwyg-extension/privacy.html)
+
+This site is automatically generated and deployed via GitHub Actions from the `/docs` directory. It presents the extension, features, and privacy policy for public and open-source access.
+
 ## License
 
 This project is open source and available for your use and modification. 
