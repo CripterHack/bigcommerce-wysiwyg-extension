@@ -24,7 +24,6 @@ The extension uses Chrome's local storage (`chrome.storage.local`) solely to sav
 Our extension requests the following permissions:
 
 - **activeTab**: To interact with the active tab and modify HTML text fields.
-- **scripting**: To run code on BigCommerce pages.
 - **storage**: To store settings locally.
 - **tabs**: To detect and respond to changes in BigCommerce tabs.
 
