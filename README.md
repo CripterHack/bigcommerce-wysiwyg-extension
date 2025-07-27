@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="img/icon.png" alt="BigCommerce WYSIWYG Editor" width="256" height="256"/>
+</p>
+
 # BigCommerce WYSIWYG Editor Chrome Extension
 
 This Chrome extension adds a native WYSIWYG editor to BigCommerce Page Builder, making it easier to edit rich text formatted content.
@@ -18,7 +22,7 @@ This Chrome extension adds a native WYSIWYG editor to BigCommerce Page Builder, 
 
 ### From the Chrome Web Store (recommended)
 
-1. Visit the [extension page on Chrome Web Store](https://chrome.google.com/webstore/detail/bigcommerce-wysiwyg-editor/ID)
+1. Visit the [extension page on Chrome Web Store](https://chrome.google.com/webstore/detail/bigcommerce-wysiwyg-editor/bejoodidhjgjibjlgnnihpjaebnildba)
 2. Click "Add to Chrome"
 3. Confirm installation
 
