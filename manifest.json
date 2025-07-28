@@ -1,6 +1,6 @@
 {
     "name": "BigCommerce WYSIWYG Editor",
-    "version": "4.2",
+    "version": "4.3",
     "description": "Adds a lightweight HTML editor to BigCommerce with keyboard shortcuts, undo/redo, and accessibility features",
     "manifest_version": 3,
     "permissions": ["activeTab", "storage", "tabs"],

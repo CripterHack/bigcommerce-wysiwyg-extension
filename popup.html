@@ -96,13 +96,33 @@
     .tips-list li {
       margin-bottom: 3px;
     }
+    .support-section {
+      margin-top: 10px;
+      font-size: 11px;
+      text-align: center;
+      color: #666;
+    }
+    .support-links {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 5px;
+    }
+    .support-link {
+      color: #1976d2;
+      text-decoration: none;
+      font-size: 10px;
+    }
+    .support-link:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
   <header>
     <h2 id="main-heading">
       BigCommerce WYSIWYG Editor
-      <span class="version" aria-label="Version 4.1">v4.1</span>
+      <span class="version" aria-label="Version 4.3">v4.3</span>
     </h2>
   </header>
 
@@ -124,9 +144,16 @@
   
   <footer class="footer">
     <nav aria-label="Extension Resources">
-      <a href="https://github.com/user/bigcommerce-wysiwyg-extension" target="_blank" rel="noopener noreferrer" class="help-link" aria-label="GitHub Repository">GitHub</a> | 
+      <a href="https://github.com/CripterHack/bigcommerce-wysiwyg-extension" target="_blank" rel="noopener noreferrer" class="help-link" aria-label="GitHub Repository">GitHub</a> | 
       <a href="#" id="help-link" class="help-link" aria-label="Help and Troubleshooting">Help</a>
     </nav>
+    <div class="support-section">
+      <div>Support this extension:</div>
+      <div class="support-links">
+        <a href="http://paypal.com/paypalme/cripterhack" target="_blank" rel="noopener noreferrer" class="support-link" aria-label="Support via PayPal">PayPal</a> |
+        <a href="https://github.com/sponsors/CripterHack" target="_blank" rel="noopener noreferrer" class="support-link" aria-label="Become a GitHub Sponsor">GitHub Sponsors</a>
+      </div>
+    </div>
   </footer>
   
   <div id="debug-info" class="visually-hidden" aria-hidden="true"></div>
